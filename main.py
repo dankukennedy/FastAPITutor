@@ -4,6 +4,7 @@ from typing import List
 from pydantic import BaseModel
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
 
 app = FastAPI()
@@ -41,8 +42,13 @@ async def index():
  #   return{"name":name ,"age":age}
 
 templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory ="static"), name="static")
 
 @app.get("/about/{name}", response_class=HTMLResponse)
 async def about(request: Request,name:str):
     return templates.TemplateResponse("about.html", {"request": request, "name":name})
 
+
+@app.get("/home/{name}", response_class=HTMLResponse)
+async def home(request: Request,name:str):
+    return templates.TemplateResponse("home.html", {"request": request, "name":name})
